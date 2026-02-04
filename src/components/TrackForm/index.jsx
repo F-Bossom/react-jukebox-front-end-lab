@@ -37,7 +37,7 @@ const TrackForm = ({
   };
 
   const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.title]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>

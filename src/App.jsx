@@ -5,7 +5,7 @@ import * as trackService from "./services/trackService";
 import TrackList from "./components/TrackList/TrackList";
 import TrackDetail from "./components/TrackDetail/index";
 import TrackForm from "./components/TrackForm/index";
-import { nowPlaying } from "./services/trackService";
+import NowPlaying from "./components/NowPlaying";
 
 function App() {
   const [tracks, setTracks] = useState([]);
@@ -36,21 +36,27 @@ function App() {
     setIsFormOpen(!isFormOpen);
   };
 
-  const handleAddTrack = async (formData) => {
-    const newTrack = await trackService.create(formData);
-    if (newTrack.err) {
-      throw new Error(newTrack.error);
-    }
-    setTracks([...tracks, newTrack]);
-    handleSelect(newTrack);
-  };
+ const handleAddTrack = async (formData) => {
+  const newTrack = await trackService.create(formData);
+
+  if (!newTrack) {
+    throw new Error("No track returned from server");
+  }
+
+  if (newTrack.err) {
+    throw new Error(newTrack.err);
+  }
+
+  setTracks([...tracks, newTrack]);
+  handleSelect(newTrack);
+};
+
 
   const handleUpdateTrack = async (formData, _id) => {
     const updatedTrack = await trackService.update(formData, _id);
     setSelected(updatedTrack);
     const newtracksArray = tracks.map((track) => {
-      // console.log(track._id, updatedTrack._id)
-      return track._id === updatedTrack._id ? updatedTrack : track; //else we will return the unchanged track
+      return track._id === updatedTrack._id ? updatedTrack : track; 
     });
     setTracks(newtracksArray);
   };
